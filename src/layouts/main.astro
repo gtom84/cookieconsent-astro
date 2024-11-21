@@ -1,0 +1,63 @@
+---
+import '../styles/global.css'
+import CookieConsent from '../components/CookieConsent.astro';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+
+          <!-- GA4 -->
+        <script
+            is:inline
+            src="https://www.googletagmanager.com/gtag/js?id=G-EP3FHZ77HN">
+        </script>
+
+        <script>
+        // We need a global definition to avoid type warnings
+        declare global {
+            interface Window {
+            dataLayer: Record<string, any>[];
+            gtag: (...args: any[]) => void;
+            }
+        }
+
+        // Initialize dataLayer
+        window.dataLayer = window.dataLayer || [];
+
+        // Define gtag function
+        window.gtag = function gtag(...args: any[]) {
+            window.dataLayer.push(arguments);
+        };
+
+        // Load GA4 with denied default consents
+        window.gtag("js", new Date());
+        window.gtag("consent", "default", {
+            ad_storage: "denied",
+            ad_user_data: "denied",
+            ad_personalization: "denied",
+            analytics_storage: "denied",
+        });
+        window.gtag("config", "G-EP3FHZ77HN");
+        </script>
+
+
+
+		<title>{title}</title>
+	</head>
+	<body>
+		<slot />
+		<CookieConsent />
+	</body>
+</html>
